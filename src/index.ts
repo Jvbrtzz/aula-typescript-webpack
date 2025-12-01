@@ -1,4 +1,8 @@
-import { externalFunction } from './mod';
+import { externalFunction } from './components/mod';
+import { getFormInfo } from './components/form';
+
+  getFormInfo();
+
 
 const nome: string = "João";
 let idade: number = 26;
@@ -85,6 +89,8 @@ function exibirMensagem(...args: string[]): void {
   console.log("Mensagem:", args.join(" - "));
 
 }
+
+
 
 exibirMensagem("Olá", "isso é uma função void", "em TypeScript");
 
@@ -247,7 +253,6 @@ meuCarro.acelerar();
 const body = document.querySelector('body') as HTMLBodyElement | null;
 if (body) {
   body.style.background = 'red';
-  body.innerHTML = 'Alterado com type assertion';
   const h1 = document.createElement('h1');
   h1.textContent = 'Conteúdo criado dinamicamente';
   body.appendChild(h1);
@@ -263,7 +268,7 @@ const body3 = document.querySelector('body');
 if (body3) {
   (body3 as HTMLElement).style.background = 'white';
   const newH1 = document.querySelector('h1');
-  if (newH1) newH1.innerHTML = 'Conteúdo da nova div';
+  if (newH1) newH1.innerHTML = 'Formulario';
 }
 
 
