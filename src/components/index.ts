@@ -1,5 +1,5 @@
-import { externalFunction } from './mod';
-import { getFormInfo } from './form';
+import { externalFunction } from "./mod";
+import { getFormInfo } from "./form";
 
 getFormInfo();
 
@@ -13,24 +13,23 @@ let array: Array<number> = [1, 2, 3, 4, 5];
 //tipo normal
 let array2: number[] = [1, 2, 3, 4, 5];
 for (let i = 0; i < 5; i++) {
-    array.push(array2[i]);
-    console.log(`Array[${i}]:`, array[i]);
+  array.push(array2[i]);
+  console.log(`Array[${i}]:`, array[i]);
 }
 console.log("Array:", array);
 
 function soma(a: number, b: number): number {
-    return a + b;
+  return a + b;
 }
 
 console.log("Soma de 2 e 3 é:", soma(2, 3));
-
 
 //Objeto com interface
 interface Pessoa {
   nome: string;
   idade: number;
   hobbies?: string[];
-  [key: string|number]: unknown; //Propriedade dinâmica
+  [key: string | number]: unknown; //Propriedade dinâmica
   endereco?: {
     rua: string;
     numero: number;
@@ -49,7 +48,7 @@ const pessoa: Pessoa = {
   },
   saudacaComVoId() {
     console.log(`Olá, meu nome é ${this.nome} e tenho ${this.idade} anos.`);
-  }
+  },
 };
 
 const pessoa2: Pessoa = {
@@ -61,22 +60,22 @@ const pessoa2: Pessoa = {
   },
   saudacaComVoId() {
     console.log(`Oi, eu sou a ${this.nome} e tenho ${this.idade} anos.`);
-  }
+  },
 };
 
 //Outro objeto(sem tipagem explícita)
-const aluno={
+const aluno = {
   nome: "tESTE",
   idade: 22,
 
   saudacao(): string {
     return `Oi, eu sou a ${this.nome} e tenho ${this.idade} anos.`;
   },
-  saudacaComVoId():void {
+  saudacaComVoId(): void {
     console.log(`Olá, meu nome é ${this.nome} e tenho ${this.idade} anos.`);
-  }
-}
-externalFunction(aluno.nome)
+  },
+};
+externalFunction(aluno.nome);
 
 console.log("Objeto pessoa:", pessoa);
 console.log(pessoa.saudacao());
@@ -86,7 +85,6 @@ console.log("Rua:", pessoa.endereco?.rua ?? "não informado");
 //Função void
 function exibirMensagem(...args: string[]): void {
   console.log("Mensagem:", args.join(" - "));
-
 }
 
 exibirMensagem("Olá", "isso é uma função void", "em TypeScript");
@@ -98,21 +96,20 @@ function imprimirArray(...args: number[]): number {
 
 console.log("Imprimir array:", imprimirArray(1, 2, 3, 4, 5));
 
-
 //tipo null e undefined
 let x;
-if (typeof x === 'undefined') x = 20;
+if (typeof x === "undefined") x = 20;
 console.log(x * 2);
 
 export function squareOf(x: any): number | null {
-  if (typeof x === 'number') return x * x;
+  if (typeof x === "number") return x * x;
   return null;
 }
 
-const squareOfTwoString = squareOf('2');
+const squareOfTwoString = squareOf("2");
 
 if (squareOfTwoString === null) {
-  console.log('Conta inválida');
+  console.log("Conta inválida");
 } else {
   console.log(squareOfTwoString * 100);
 }
@@ -120,12 +117,12 @@ if (squareOfTwoString === null) {
 enum Cor {
   Vermelho,
   Verde,
-  Azul
+  Azul,
 }
-enum Cor{
+enum Cor {
   Amarelo = 5,
   Preto,
-  Branco
+  Branco,
 }
 let minhaCor: Cor = Cor.Branco;
 let minhaCor2: Cor = Cor.Azul;
@@ -147,7 +144,7 @@ console.log("Resultado any:", resultadoAny);
 
 //Operação com unknown (é necessário fazer uma verificação de tipo)
 let resultadoUnknown: number;
-if (typeof valorUnknown === 'number') {
+if (typeof valorUnknown === "number") {
   resultadoUnknown = valorUnknown + 5;
   console.log("Resultado unknown:", resultadoUnknown);
 } else {
@@ -162,7 +159,7 @@ exibirNota(10);
 exibirNota("dez");
 
 function somaouconcatena(a: number | string, b: number | string): number | string {
-  if (typeof a === 'number' && typeof b === 'number') {
+  if (typeof a === "number" && typeof b === "number") {
     return a + b;
   } else {
     return a.toString() + b.toString();
@@ -195,7 +192,7 @@ type AB = A & B;
 
 const objetoAB: AB = {
   propA: "Valor A",
-  propB: 42
+  propB: 42,
 };
 
 console.log("Objeto AB:", objetoAB);
@@ -207,7 +204,7 @@ type PessoaCompleta = TemNome & TemIdade;
 
 const pessoaCompleta: PessoaCompleta = {
   nome: "Carlos",
-  idade: 28
+  idade: 28,
 };
 
 console.log("Pessoa Completa:", pessoaCompleta);
@@ -244,28 +241,24 @@ const meuCarro = new Carro(4);
 meuCarro.func;
 meuCarro.acelerar();
 
-
-
 // Manipulação segura do DOM: criar e anexar elementos corretamente
-const body = document.querySelector('body') as HTMLBodyElement | null;
+const body = document.querySelector("body") as HTMLBodyElement | null;
 if (body) {
-  body.style.background = 'red';
-  const h1 = document.createElement('h1');
-  h1.textContent = 'Conteúdo criado dinamicamente';
+  body.style.background = "red";
+  const h1 = document.createElement("h1");
+  h1.textContent = "Conteúdo criado dinamicamente";
   body.appendChild(h1);
 }
 
-const body2 = document.querySelector('body');
+const body2 = document.querySelector("body");
 if (body2) {
-  (body2 as HTMLElement).style.background = 'blue';
+  (body2 as HTMLElement).style.background = "blue";
 }
 
 // Evite usar non-null assertion (!) sem checar; faça a verificação
-const body3 = document.querySelector('body');
+const body3 = document.querySelector("body");
 if (body3) {
-  (body3 as HTMLElement).style.background = 'white';
-  const newH1 = document.querySelector('h1');
-  if (newH1) newH1.innerHTML = 'Formulario';
+  (body3 as HTMLElement).style.background = "white";
+  const newH1 = document.querySelector("h1");
+  if (newH1) newH1.innerHTML = "Formulario";
 }
-
-

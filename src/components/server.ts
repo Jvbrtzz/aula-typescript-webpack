@@ -1,4 +1,4 @@
-import express, { Express, Request, Response } from 'express';
+import express, { Express, Request, Response } from "express";
 
 // Exemplo simples: usar um "banco" em memória (você substituirá com SQLite/MongoDB/etc.)
 interface User {
@@ -15,22 +15,22 @@ app.use(express.json());
 
 // "Banco de dados" simples em memória
 let users: User[] = [
-  { id: 1, name: 'João', email: 'joao@email.com' },
-  { id: 2, name: 'Maria', email: 'maria@email.com' },
+  { id: 1, name: "João", email: "joao@email.com" },
+  { id: 2, name: "Maria", email: "maria@email.com" },
 ];
 
 // GET - Retorna todos os usuários
-app.get('/users', (req: Request, res: Response) => {
+app.get("/users", (req: Request, res: Response) => {
   res.json(users);
 });
 
 // GET - Retorna um usuário por ID
-app.get('/users/:id', (req: Request, res: Response) => {
+app.get("/users/:id", (req: Request, res: Response) => {
   const userId = parseInt(req.params.id);
-  const user = users.find(u => u.id === userId);
+  const user = users.find((u) => u.id === userId);
 
   if (!user) {
-    res.status(404).json({ error: 'Usuário não encontrado' });
+    res.status(404).json({ error: "Usuário não encontrado" });
     return;
   }
 
@@ -38,16 +38,16 @@ app.get('/users/:id', (req: Request, res: Response) => {
 });
 
 // POST - Cria um novo usuário
-app.post('/users', (req: Request, res: Response) => {
+app.post("/users", (req: Request, res: Response) => {
   const { name, email } = req.body;
 
   if (!name || !email) {
-    res.status(400).json({ error: 'Nome e email são obrigatórios' });
+    res.status(400).json({ error: "Nome e email são obrigatórios" });
     return;
   }
 
   const newUser: User = {
-    id: users.length > 0 ? Math.max(...users.map(u => u.id)) + 1 : 1,
+    id: users.length > 0 ? Math.max(...users.map((u) => u.id)) + 1 : 1,
     name,
     email,
   };
@@ -57,12 +57,12 @@ app.post('/users', (req: Request, res: Response) => {
 });
 
 // PUT - Atualiza um usuário
-app.put('/users/:id', (req: Request, res: Response) => {
+app.put("/users/:id", (req: Request, res: Response) => {
   const userId = parseInt(req.params.id);
-  const user = users.find(u => u.id === userId);
+  const user = users.find((u) => u.id === userId);
 
   if (!user) {
-    res.status(404).json({ error: 'Usuário não encontrado' });
+    res.status(404).json({ error: "Usuário não encontrado" });
     return;
   }
 
@@ -74,12 +74,12 @@ app.put('/users/:id', (req: Request, res: Response) => {
 });
 
 // DELETE - Remove um usuário
-app.delete('/users/:id', (req: Request, res: Response) => {
+app.delete("/users/:id", (req: Request, res: Response) => {
   const userId = parseInt(req.params.id);
-  const index = users.findIndex(u => u.id === userId);
+  const index = users.findIndex((u) => u.id === userId);
 
   if (index === -1) {
-    res.status(404).json({ error: 'Usuário não encontrado' });
+    res.status(404).json({ error: "Usuário não encontrado" });
     return;
   }
 

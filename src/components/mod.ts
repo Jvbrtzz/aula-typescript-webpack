@@ -1,4 +1,4 @@
 function externalFunction(data: string): void {
-    console.log(data, 'from externalFunction');
+  console.log(data, "from externalFunction");
 }
 export { externalFunction };

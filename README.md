@@ -2,7 +2,7 @@ Projeto TypeScript — Instruções Rápidas
 
 Este repositório contém um exemplo mínimo para começar a desenvolver com TypeScript.
 
-1) Abordagem recomendada (fácil — CommonJS)
+1. Abordagem recomendada (fácil — CommonJS)
 
 - Objetivo: evitar problemas com módulos ESM e `ts-node` durante o desenvolvimento.
 - Passos (PowerShell):
@@ -33,7 +33,6 @@ npx tsc
 node .\dist\index.js (se não existir um script para isso)
 ```
 
-
 - Exemplo mínimo de `tsconfig.json` recomendado para CommonJS:
 
 ```
@@ -62,7 +61,7 @@ node .\dist\index.js (se não existir um script para isso)
 
 Vantagens: simples, funciona com Code Runner e `ts-node` sem configurações ESM extras.
 
-2) Abordagem moderna (ESM)
+2. Abordagem moderna (ESM)
 
 - Objetivo: usar módulos ES nativos (`import`/`export`). Requer configurações adicionais.
 - Passos (PowerShell):
@@ -74,9 +73,9 @@ npx tsc --init
 ```
 
 - Ajustes importantes:
-	- Em `package.json`: adicionar `"type": "module"`
-	- Em `tsconfig.json`: usar `"module": "ES2020"` ou `"NodeNext"`
-	- Para `ts-node` com ESM, ativar em `tsconfig.json`:
+  - Em `package.json`: adicionar `"type": "module"`
+  - Em `tsconfig.json`: usar `"module": "ES2020"` ou `"NodeNext"`
+  - Para `ts-node` com ESM, ativar em `tsconfig.json`:
 
 ```
 "ts-node": { "esm": true }
@@ -92,7 +91,7 @@ npx ts-node-esm src/index.ts
 
 Nota: sem o loader/config correto, o Node lançará erros como "Unknown file extension '.ts'".
 
-3) Configuração do Code Runner (VS Code)
+3. Configuração do Code Runner (VS Code)
 
 - Exemplo de configuração em `.vscode/settings.json` para rodar TypeScript com `npx ts-node`:
 
@@ -106,22 +105,22 @@ Nota: sem o loader/config correto, o Node lançará erros como "Unknown file ext
 }
 ```
 
-4) Explicação dos erros comuns que você encontrou
+4. Explicação dos erros comuns que você encontrou
 
 - Warning: "To load an ES module, set \"type\": \"module\" in the package.json or use the .mjs extension"
-	- Isso aparece quando o Node está em modo CommonJS por padrão e encontra código que usa sintaxe de módulos ES.
-	- Solução: ou passar para ESM (adicionando `"type": "module"`) ou usar CommonJS no `tsconfig`.
+  - Isso aparece quando o Node está em modo CommonJS por padrão e encontra código que usa sintaxe de módulos ES.
+  - Solução: ou passar para ESM (adicionando `"type": "module"`) ou usar CommonJS no `tsconfig`.
 
 - Error: "Unknown file extension '.ts'"
-	- Ocorre quando Node tenta executar um arquivo `.ts` sem o loader/transpiler (ts-node ESM) configurado.
-	- Solução: usar `ts-node` configurado para ESM, ou executar o arquivo transpilado (`node dist/index.js`).
+  - Ocorre quando Node tenta executar um arquivo `.ts` sem o loader/transpiler (ts-node ESM) configurado.
+  - Solução: usar `ts-node` configurado para ESM, ou executar o arquivo transpilado (`node dist/index.js`).
 
-5) Próximos passos — sugestões
+5. Próximos passos — sugestões
 
 - Se deseja a opção mais simples (recomendada para começar): eu posso automaticamente:
-	- criar `src/index.ts` com um exemplo
-	- ajustar `tsconfig.json` para `module: CommonJS`
-	- adicionar scripts `dev`/`build` em `package.json`
+  - criar `src/index.ts` com um exemplo
+  - ajustar `tsconfig.json` para `module: CommonJS`
+  - adicionar scripts `dev`/`build` em `package.json`
 
 - Se preferir ESM, eu posso ajustar `package.json`, `tsconfig.json` e mostrar o comando exato que o Code Runner deve usar.
 
