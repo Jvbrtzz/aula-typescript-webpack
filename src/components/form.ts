@@ -10,6 +10,7 @@ function getFormInfo(): string | void {
     const cepInput = form.querySelector('input[name="cep"]') as HTMLInputElement;
 
     form.addEventListener("submit", async (event) => {
+      cepHTMLTrue();
       event.preventDefault();
       const formData = {
         nome: nomeInput ? nomeInput.value : "",
@@ -17,19 +18,9 @@ function getFormInfo(): string | void {
         mensagem: mensagemInput ? [mensagemInput.value] : undefined,
         cep: cepInput ? cepInput.value : "",
       };
-      const iscep = await fetchCepData(formData.cep);
-      let rua = "";
-      if (iscep) {
-        const cepData = await getCepInfo(formData.cep);
-        rua = cepData?.logradouro || "";
-      }
-      if (iscep) {
-        console.log("cep válido.");
-      }
-      writeUserData(formData.nome, formData.email, formData.mensagem ? formData.mensagem[0] : "", formData.cep, rua);
-      validateForm(formData);
-      console.log("Dados do formulário:", formData);
-      console.log("Formulário enviado!");
+
+      validate(formData as any);
+      cepHTMLFalse()
     });
   } else {
     console.log("Formulário não encontrado no DOM.");
@@ -47,8 +38,35 @@ async function fetchCepData(cep: string): Promise<boolean> {
   }
 }
 
-function writeUserData(nome: string, email: string, message: string, cep: string, rua: string): void {
-  if (nome && email && message && cep) {
+async function validate(formData: {nome: string, email: string, cep: string, rua: string, message?: string}): void {
+  const errorDiv = document.querySelector("#error-messages") as HTMLElement;
+
+  const validationMsg = validateForm(formData);
+
+  errorDiv.style.color = "red";
+  errorDiv.textContent = "";
+
+  if (validationMsg !== "Formulário válido") {
+    errorDiv.textContent = validationMsg;
+    writeUserData(' ', ' ', ' ',' ', ' ');
+    return;
+  }
+
+  const iscep = await fetchCepData(formData.cep);
+      let rua = "";
+      if (iscep) {
+        const cepData = await getCepInfo(formData.cep);
+        rua = cepData?.logradouro || "";
+      }
+
+  errorDiv.style.color = "green";
+  errorDiv.textContent = "Formulário válido!";
+  writeUserData(formData.nome, formData.email, formData.cep, rua, formData.message ? formData.message : "");
+
+}
+
+function writeUserData(nome: string, email: string, cep: string, rua: string, message?: string): void {
+  if (nome && email && cep) {
     const nomeItem = document.querySelector("#user-name") as HTMLElement;
     const emailItem = document.querySelector("#user-email") as HTMLElement;
     const messageItem = document.querySelector("#user-message") as HTMLElement;
@@ -57,12 +75,28 @@ function writeUserData(nome: string, email: string, message: string, cep: string
 
     nomeItem.textContent = nome;
     emailItem.textContent = email;
-    messageItem.textContent = message;
+    if (message) {
+      messageItem.textContent = message;
+    }
     cepItem.textContent = cep;
     ruaItem.textContent = rua;
   } else {
     console.log("Dados incompletos para preencher o formulário.");
   }
+}
+
+
+function cepHTMLTrue():void {
+  const cepMessageElement = document.querySelector(".cep") as HTMLElement;
+
+  if (!cepMessageElement) return;
+  cepMessageElement.style.display = "block";
+}
+function cepHTMLFalse():void {
+  const cepMessageElement = document.querySelector(".cep") as HTMLElement;
+
+  if (!cepMessageElement) return;
+  cepMessageElement.style.display = "none";
 }
 
 export { getFormInfo };
