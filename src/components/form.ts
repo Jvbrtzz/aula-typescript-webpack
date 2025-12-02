@@ -38,7 +38,7 @@ async function fetchCepData(cep: string): Promise<boolean> {
   }
 }
 
-async function validate(formData: {nome: string, email: string, cep: string, rua: string, message?: string}): void {
+async function validate(formData: {nome: string, email: string, cep: string, rua: string, message?: string}): Promise<void> {
   const errorDiv = document.querySelector("#error-messages") as HTMLElement;
 
   const validationMsg = validateForm(formData);
