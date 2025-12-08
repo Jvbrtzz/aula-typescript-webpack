@@ -3940,7 +3940,7 @@ function getFormInfo() {
         const mensagemInput = form.querySelector('textarea[name="mensagem"]');
         const cepInput = form.querySelector('input[name="cep"]');
         form.addEventListener("submit", async (event) => {
-            cepHTMLTrue();
+            cepHTMLTrue(true);
             event.preventDefault();
             const formData = {
                 nome: nomeInput ? nomeInput.value : "",
@@ -3949,7 +3949,6 @@ function getFormInfo() {
                 cep: cepInput ? cepInput.value : "",
             };
             validate(formData);
-            cepHTMLFalse();
         });
     }
     else {
@@ -3960,10 +3959,12 @@ async function fetchCepData(cep) {
     const data = await (0, http_1.getCepInfo)(cep);
     if (data) {
         console.log("Dados do cep:", data);
+        cepHTMLTrue(false);
         return true;
     }
     else {
         console.log("Nenhum dado encontrado para o cep fornecido.");
+        cepHTMLTrue(false);
         return false;
     }
 }
@@ -3974,7 +3975,7 @@ async function validate(formData) {
     errorDiv.textContent = "";
     if (validationMsg !== "Formulário válido") {
         errorDiv.textContent = validationMsg;
-        writeUserData(' ', ' ', ' ', ' ', ' ');
+        writeUserData(" ", " ", " ", " ", " ");
         return;
     }
     const iscep = await fetchCepData(formData.cep);
@@ -3982,6 +3983,11 @@ async function validate(formData) {
     if (iscep) {
         const cepData = await (0, http_1.getCepInfo)(formData.cep);
         rua = cepData?.logradouro || "";
+    }
+    else {
+        errorDiv.textContent = "CEP inválido.";
+        writeUserData(" ", " ", " ", " ", " ");
+        return;
     }
     errorDiv.style.color = "green";
     errorDiv.textContent = "Formulário válido!";
@@ -4006,17 +4012,13 @@ function writeUserData(nome, email, cep, rua, message) {
         console.log("Dados incompletos para preencher o formulário.");
     }
 }
-function cepHTMLTrue() {
+function cepHTMLTrue(flag) {
     const cepMessageElement = document.querySelector(".cep");
+    console.log(flag);
     if (!cepMessageElement)
         return;
-    cepMessageElement.style.display = "block";
-}
-function cepHTMLFalse() {
-    const cepMessageElement = document.querySelector(".cep");
-    if (!cepMessageElement)
-        return;
-    cepMessageElement.style.display = "none";
+    let div = flag == true ? "block" : "none";
+    cepMessageElement.style.display = div;
 }
 
 

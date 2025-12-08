@@ -28,5 +28,4 @@ function validateForm(form: Form): string {
   return "Formulário válido";
 }
 
-
 export { validateForm };

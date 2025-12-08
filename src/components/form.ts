@@ -10,7 +10,7 @@ function getFormInfo(): string | void {
     const cepInput = form.querySelector('input[name="cep"]') as HTMLInputElement;
 
     form.addEventListener("submit", async (event) => {
-      cepHTMLTrue();
+      cepHTMLTrue(true);
       event.preventDefault();
       const formData = {
         nome: nomeInput ? nomeInput.value : "",
@@ -20,7 +20,7 @@ function getFormInfo(): string | void {
       };
 
       validate(formData as any);
-      cepHTMLFalse()
+
     });
   } else {
     console.log("Formulário não encontrado no DOM.");
@@ -31,14 +31,22 @@ async function fetchCepData(cep: string): Promise<boolean> {
   const data = await getCepInfo(cep);
   if (data) {
     console.log("Dados do cep:", data);
+     cepHTMLTrue(false);
     return true;
   } else {
     console.log("Nenhum dado encontrado para o cep fornecido.");
+    cepHTMLTrue(false);
     return false;
   }
 }
 
-async function validate(formData: {nome: string, email: string, cep: string, rua: string, message?: string}): Promise<void> {
+async function validate(formData: {
+  nome: string;
+  email: string;
+  cep: string;
+  rua: string;
+  message?: string;
+}): Promise<void> {
   const errorDiv = document.querySelector("#error-messages") as HTMLElement;
 
   const validationMsg = validateForm(formData);
@@ -48,21 +56,24 @@ async function validate(formData: {nome: string, email: string, cep: string, rua
 
   if (validationMsg !== "Formulário válido") {
     errorDiv.textContent = validationMsg;
-    writeUserData(' ', ' ', ' ',' ', ' ');
+    writeUserData(" ", " ", " ", " ", " ");
     return;
   }
 
   const iscep = await fetchCepData(formData.cep);
-      let rua = "";
-      if (iscep) {
-        const cepData = await getCepInfo(formData.cep);
-        rua = cepData?.logradouro || "";
-      }
+  let rua = "";
+  if (iscep) {
+    const cepData = await getCepInfo(formData.cep);
+    rua = cepData?.logradouro || "";
+  }else {
+    errorDiv.textContent = "CEP inválido.";
+    writeUserData(" ", " ", " ", " ", " ");
+    return;
+  }
 
   errorDiv.style.color = "green";
   errorDiv.textContent = "Formulário válido!";
   writeUserData(formData.nome, formData.email, formData.cep, rua, formData.message ? formData.message : "");
-
 }
 
 function writeUserData(nome: string, email: string, cep: string, rua: string, message?: string): void {
@@ -85,18 +96,12 @@ function writeUserData(nome: string, email: string, cep: string, rua: string, me
   }
 }
 
-
-function cepHTMLTrue():void {
+function cepHTMLTrue(flag: boolean): void {
   const cepMessageElement = document.querySelector(".cep") as HTMLElement;
-
+  console.log(flag);
   if (!cepMessageElement) return;
-  cepMessageElement.style.display = "block";
-}
-function cepHTMLFalse():void {
-  const cepMessageElement = document.querySelector(".cep") as HTMLElement;
-
-  if (!cepMessageElement) return;
-  cepMessageElement.style.display = "none";
+  let div = flag == true ? "block":  "none";
+  cepMessageElement.style.display = div;
 }
 
 export { getFormInfo };
