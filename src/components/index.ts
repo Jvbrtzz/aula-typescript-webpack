@@ -262,3 +262,71 @@ if (body3) {
   const newH1 = document.querySelector("h1");
   if (newH1) newH1.innerHTML = "Formulario";
 }
+
+
+class Calculadora {
+  constructor(private _numero: number) {}
+
+  get numero(): number {
+    return this._numero;
+  }
+
+  set numero(n: number) {
+    this._numero = n;
+  }
+
+  add(n: number) {
+    this.numero += n;
+    return this;
+  }
+}
+
+const cal = new Calculadora(10)
+cal.add(10).add(10);
+console.log(cal)
+
+// Builder - GoF
+export class RequestBuilder {
+  private method: 'get' | 'post' | null = null;
+  private url: string | null = null;
+
+  setMethod(method: 'get' | 'post'): this {
+    this.method = method;
+    return this;
+  }
+
+  setUrl(url: string): this {
+    this.url = url;
+    return this;
+  }
+
+  send(): void {
+    console.log(`Enviando dados via ${this.method} para ${this.url}`);
+  }
+}
+
+const request = new RequestBuilder(); // Builder
+request.setUrl('http://www.google.com').setMethod('get').send();
+
+//generics
+type FilterCallback<U> = (value: U) => boolean;
+
+export function meuFilter<T>(array: T[], callbackfn: FilterCallback<T>): T[] {
+  const novoArray = [];
+
+  for (let i = 0; i < array.length; i++) {
+    if (callbackfn(array[i])) {
+      novoArray.push(array[i]);
+    }
+  }
+
+  return novoArray;
+}
+
+const arrayNumbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+
+const arrayFiltradoOriginal = arrayNumbers.filter((value) => value < 5);
+console.log(arrayFiltradoOriginal);
+
+const arrayFiltrado = meuFilter(arrayNumbers, (value) => value < 5);
+console.log(arrayFiltrado);
