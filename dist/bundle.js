@@ -4037,10 +4037,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getCepInfo = getCepInfo;
 const axios_1 = __importDefault(__webpack_require__(/*! axios */ "./node_modules/axios/dist/browser/axios.cjs"));
+const __1 = __webpack_require__(/*! ../.. */ "./src/index.ts");
 async function getCepInfo(cep) {
-    const url = `https://viacep.com.br/ws/${cep}/json/`;
+    const request = new __1.RequestBuilder()
+        .withUrl(`https://viacep.com.br/ws/${cep}/json/`)
+        .withMethod('get');
+    console.log("Método:", request.method);
+    console.log("URL:", request.url);
     try {
-        const response = await axios_1.default.get(url);
+        const response = await (0, axios_1.default)({
+            url: request.url,
+            method: request.method
+        });
         return response.data;
     }
     catch (error) {
@@ -4096,60 +4104,21 @@ function validateForm(form) {
 }
 
 
-/***/ })
+/***/ }),
 
-/******/ 	});
-/************************************************************************/
-/******/ 	// The module cache
-/******/ 	var __webpack_module_cache__ = {};
-/******/ 	
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/ 		// Check if module is in cache
-/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
-/******/ 		if (cachedModule !== undefined) {
-/******/ 			return cachedModule.exports;
-/******/ 		}
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = __webpack_module_cache__[moduleId] = {
-/******/ 			// no module.id needed
-/******/ 			// no module.loaded needed
-/******/ 			exports: {}
-/******/ 		};
-/******/ 	
-/******/ 		// Execute the module function
-/******/ 		__webpack_modules__[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-/******/ 	
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
-/******/ 	}
-/******/ 	
-/************************************************************************/
-/******/ 	/* webpack/runtime/global */
-/******/ 	(() => {
-/******/ 		__webpack_require__.g = (function() {
-/******/ 			if (typeof globalThis === 'object') return globalThis;
-/******/ 			try {
-/******/ 				return this || new Function('return this')();
-/******/ 			} catch (e) {
-/******/ 				if (typeof window === 'object') return window;
-/******/ 			}
-/******/ 		})();
-/******/ 	})();
-/******/ 	
-/************************************************************************/
-var __webpack_exports__ = {};
-// This entry needs to be wrapped in an IIFE because it needs to be isolated against other modules in the chunk.
-(() => {
-var exports = __webpack_exports__;
-/*!*********************************!*\
-  !*** ./src/components/index.ts ***!
-  \*********************************/
+/***/ "./src/index.ts":
+/*!**********************!*\
+  !*** ./src/index.ts ***!
+  \**********************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.RequestBuilder = void 0;
 exports.squareOf = squareOf;
-const mod_1 = __webpack_require__(/*! ./mod */ "./src/components/mod.ts");
-const form_1 = __webpack_require__(/*! ./form */ "./src/components/form.ts");
+exports.meuFilter = meuFilter;
+const mod_1 = __webpack_require__(/*! ./components/mod */ "./src/components/mod.ts");
+const form_1 = __webpack_require__(/*! ./components/form */ "./src/components/form.ts");
 (0, form_1.getFormInfo)();
 const nome = "João";
 let idade = 26;
@@ -4337,9 +4306,214 @@ if (body3) {
     if (newH1)
         newH1.innerHTML = "Formulario";
 }
+class Calculadora {
+    constructor(_numero) {
+        this._numero = _numero;
+    }
+    get numero() {
+        return this._numero;
+    }
+    set numero(n) {
+        this._numero = n;
+    }
+    add(n) {
+        this.numero += n;
+        return this;
+    }
+}
+const cal = new Calculadora(10);
+cal.add(10).add(10);
+console.log(cal);
+// Builder - GoF
+class RequestBuilder {
+    constructor() {
+        this._method = null;
+        this._url = null;
+    }
+    // setter moderno
+    set method(method) {
+        this._method = method;
+    }
+    // getter moderno
+    get method() {
+        return this._method;
+    }
+    // setter moderno
+    set url(url) {
+        this._url = url;
+    }
+    // getter moderno
+    get url() {
+        return this._url;
+    }
+    // método de builder (para encadeamento)
+    withMethod(method) {
+        this.method = method;
+        return this;
+    }
+    withUrl(url) {
+        this.url = url;
+        return this;
+    }
+    send() {
+        console.log(`Enviando dados via ${this.method} para ${this.url}`);
+        return this.url;
+    }
+}
+exports.RequestBuilder = RequestBuilder;
+const request = new RequestBuilder(); // Builder
+request.withUrl('http://www.google.com').withMethod('get').send();
+function meuFilter(array, callbackfn) {
+    const novoArray = [];
+    for (let i = 0; i < array.length; i++) {
+        if (callbackfn(array[i])) {
+            novoArray.push(array[i]);
+        }
+    }
+    return novoArray;
+}
+const arrayNumbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+const arrayFiltradoOriginal = arrayNumbers.filter((value) => value < 5);
+console.log(arrayFiltradoOriginal);
+const arrayFiltrado = meuFilter(arrayNumbers, (value) => value < 5);
+console.log(arrayFiltrado);
+function atualizarProduto(produto, atualizacoes) {
+    return { ...produto, ...atualizacoes };
+}
+const produto = {
+    nome: "Camiseta",
+    preco: 29.99,
+};
+const produtoAtualizado = atualizarProduto(produto, {
+    preco: 24.99,
+    descricao: "Camiseta de algodão",
+});
+console.log("Produto atualizado:", produtoAtualizado);
+function criarProduto(produto) {
+    return produto;
+}
+const novoProduto = criarProduto({
+    nome: "Calça",
+    preco: 59.99,
+    descricao: "Calça jeans",
+});
+console.log("Novo produto:", novoProduto);
+function exibirNomeProduto(produto) {
+    console.log("Nome do produto:", produto.nome);
+}
+exibirNomeProduto({ nome: "Tênis" });
+const usuario = {
+    id: 1,
+    nome: "Ana",
+    email: "ana@email.com"
+};
+console.log("Dados públicos do usuário:", usuario);
+class Votacao {
+    static votarJa(linguagem) {
+        const votoExistente = this.total.find(item => item.linguagem === linguagem);
+        if (votoExistente) {
+            votoExistente.votos += 1;
+        }
+        else {
+            this.total.push({ linguagem, votos: 1 });
+        }
+    }
+    static getVotos() {
+        return this.total;
+    }
+}
+Votacao.total = [];
+Votacao.votarJa('TypeScript');
+Votacao.votarJa('JavaScript');
+Votacao.votarJa('Python');
+Votacao.votarJa('Java');
+Votacao.votarJa('Java');
+console.log(Votacao.getVotos());
+class Votacao2 {
+    constructor() {
+        this.linguagem = [];
+    }
+    addOpcao(linguagem, qtde) {
+        this.linguagem.push(linguagem);
+        this.qtde = qtde;
+        Votacao2.total.push({ linguagem, votos: qtde });
+    }
+    votarJa(linguagem, qtde) {
+        const votoExistente = Votacao2.total.find(item => item.linguagem === linguagem);
+        console.log(votoExistente);
+        if (votoExistente) {
+            votoExistente.votos += qtde;
+        }
+        else {
+            console.log(linguagem + " não está entre as opções de voto.");
+        }
+    }
+    static getVotos() {
+        return Votacao2.total;
+    }
+}
+Votacao2.total = [];
+const votacao = new Votacao2();
+votacao.addOpcao('TypeScript', 0);
+votacao.addOpcao('JavaScript', 0);
+votacao.addOpcao('Python', 0);
+votacao.addOpcao('Java', 0);
+votacao.votarJa('Java', 1);
+votacao.votarJa('Java', 1);
+votacao.votarJa('Java', 1);
+votacao.votarJa('Python', 1);
+votacao.votarJa('GO', 1);
+console.log(Votacao2.getVotos());
 
-})();
 
+/***/ })
+
+/******/ 	});
+/************************************************************************/
+/******/ 	// The module cache
+/******/ 	var __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		if (cachedModule !== undefined) {
+/******/ 			return cachedModule.exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 			// no module.id needed
+/******/ 			// no module.loaded needed
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		__webpack_modules__[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	
+/************************************************************************/
+/******/ 	/* webpack/runtime/global */
+/******/ 	(() => {
+/******/ 		__webpack_require__.g = (function() {
+/******/ 			if (typeof globalThis === 'object') return globalThis;
+/******/ 			try {
+/******/ 				return this || new Function('return this')();
+/******/ 			} catch (e) {
+/******/ 				if (typeof window === 'object') return window;
+/******/ 			}
+/******/ 		})();
+/******/ 	})();
+/******/ 	
+/************************************************************************/
+/******/ 	
+/******/ 	// startup
+/******/ 	// Load entry module and return exports
+/******/ 	// This entry module is referenced by other modules so it can't be inlined
+/******/ 	var __webpack_exports__ = __webpack_require__("./src/index.ts");
+/******/ 	
 /******/ })()
 ;
 //# sourceMappingURL=bundle.js.map

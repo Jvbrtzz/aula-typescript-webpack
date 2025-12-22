@@ -262,3 +262,237 @@ if (body3) {
   const newH1 = document.querySelector("h1");
   if (newH1) newH1.innerHTML = "Formulario";
 }
+
+
+class Calculadora {
+  constructor(private _numero: number) {}
+
+  get numero(): number {
+    return this._numero;
+  }
+
+  set numero(n: number) {
+    this._numero = n;
+  }
+
+  add(n: number) {
+    this.numero += n;
+    return this;
+  }
+}
+
+const cal = new Calculadora(10)
+cal.add(10).add(10);
+console.log(cal)
+
+// Builder - GoF
+export class RequestBuilder {
+  private _method: 'get' | 'post' | null = null;
+  private _url: string | null = null;
+
+  // setter moderno
+  set method(method: 'get' | 'post') {
+    this._method = method;
+  }
+
+  // getter moderno
+  get method(): 'get' | 'post' | null {
+    return this._method;
+  }
+
+  // setter moderno
+  set url(url: string | null) {
+    this._url = url;
+  }
+
+  // getter moderno
+  get url(): string | null {
+    return this._url;
+  }
+
+  // método de builder (para encadeamento)
+  withMethod(method: 'get' | 'post'): this {
+    this.method = method;
+    return this;
+  }
+
+  withUrl(url: string): this {
+    this.url = url;
+    return this;
+  }
+
+  send(): string | null {
+    console.log(`Enviando dados via ${this.method} para ${this.url}`);
+    return this.url;
+  }
+}
+
+const request = new RequestBuilder(); // Builder
+request.withUrl('http://www.google.com').withMethod('get').send();
+
+//generics
+type FilterCallback<U> = (value: U) => boolean;
+
+export function meuFilter<T>(array: T[], callbackfn: FilterCallback<T>): T[] {
+  const novoArray = [];
+
+  for (let i = 0; i < array.length; i++) {
+    if (callbackfn(array[i])) {
+      novoArray.push(array[i]);
+    }
+  }
+
+  return novoArray;
+}
+
+const arrayNumbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+
+const arrayFiltradoOriginal = arrayNumbers.filter((value) => value < 5);
+console.log(arrayFiltradoOriginal);
+
+const arrayFiltrado = meuFilter(arrayNumbers, (value) => value < 5);
+console.log(arrayFiltrado);
+
+//required e partial e pick
+interface Produto {
+  nome: string;
+  preco: number;
+  descricao?: string;
+}
+
+function atualizarProduto(
+  produto: Produto,
+  atualizacoes: Partial<Produto>
+): Produto {
+  return { ...produto, ...atualizacoes };
+}
+
+const produto: Produto = {
+  nome: "Camiseta",
+  preco: 29.99,
+};
+
+const produtoAtualizado = atualizarProduto(produto, {
+  preco: 24.99,
+  descricao: "Camiseta de algodão",
+});
+
+console.log("Produto atualizado:", produtoAtualizado);
+
+function criarProduto(produto: Required<Produto>): Produto {
+  return produto;
+}
+
+const novoProduto = criarProduto({
+  nome: "Calça",
+  preco: 59.99,
+  descricao: "Calça jeans",
+});
+
+console.log("Novo produto:", novoProduto);
+
+function exibirNomeProduto(produto: Pick<Produto, "nome">): void {
+  console.log("Nome do produto:", produto.nome);
+}
+
+exibirNomeProduto({ nome: "Tênis" });
+
+//extract e exclude
+type ABC = "A" | "B" | "C";
+type AC = Extract<ABC, "A" | "C">; // "A" | "C"
+type C = Exclude<ABC, "A" | "B">; // "C"
+
+//pick com exclude e keyof
+interface Usuario {
+  id: number;
+  nome: string;
+  email: string;
+  senha: string;
+}
+
+type DadosPublicosUsuario = Pick<
+  Usuario,
+  Exclude<keyof Usuario, "senha">
+>;
+
+const usuario: DadosPublicosUsuario = {
+  id: 1,
+  nome: "Ana",
+  email: "ana@email.com"
+} ;
+
+console.log("Dados públicos do usuário:", usuario);
+
+type Linguagem = 'TypeScript' | 'JavaScript' | 'Python' | 'Java';
+
+class Votacao {
+  private static total: { votos: number; linguagem: Linguagem }[] = [];
+
+  static votarJa(linguagem: Linguagem): void {
+    const votoExistente = this.total.find(
+      item => item.linguagem === linguagem
+    );
+
+    if (votoExistente) {
+      votoExistente.votos += 1;
+    } else {
+      this.total.push({ linguagem, votos: 1 });
+    }
+  }
+
+  static getVotos(): {}[] {
+    return this.total;
+  }
+}
+
+Votacao.votarJa('TypeScript');
+Votacao.votarJa('JavaScript');
+Votacao.votarJa('Python');
+Votacao.votarJa('Java');
+Votacao.votarJa('Java');
+
+console.log(Votacao.getVotos());
+
+class Votacao2 {
+  private static total: { votos: number; linguagem: string }[] = [];
+  private linguagem: string[] = [];
+  private qtde!: number;
+
+  addOpcao(linguagem: string, qtde: number): void {
+    this.linguagem.push(linguagem);
+    this.qtde = qtde;
+    Votacao2.total.push({ linguagem, votos: qtde });
+  }
+
+  votarJa(linguagem: string, qtde: number): void {
+    const votoExistente = Votacao2.total.find(
+      item => item.linguagem === linguagem
+    );
+    console.log(votoExistente)
+    if (votoExistente) {
+      votoExistente.votos += qtde;
+    }else {
+      console.log(linguagem + " não está entre as opções de voto.");
+
+    }
+  }
+
+  static getVotos(): {}[] {
+    return Votacao2.total;
+  }
+
+}
+
+const votacao = new Votacao2();
+votacao.addOpcao('TypeScript', 0);
+votacao.addOpcao('JavaScript', 0);
+votacao.addOpcao('Python', 0);
+votacao.addOpcao('Java', 0);
+
+votacao.votarJa('Java', 1);
+votacao.votarJa('Java', 1);
+votacao.votarJa('Java', 1);
+votacao.votarJa('Python', 1);
+votacao.votarJa('GO', 1);
+
+console.log(Votacao2.getVotos());
