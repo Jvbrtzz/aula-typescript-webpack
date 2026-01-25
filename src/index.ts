@@ -496,3 +496,30 @@ votacao.votarJa('Python', 1);
 votacao.votarJa('GO', 1);
 
 console.log(Votacao2.getVotos());
+
+//this em funções normais e arrow functions
+const person = {
+  name: "Alice",
+  age: 28,
+}
+
+function fullNamefn(this: any){
+  return `Full name is: ${this.name} and age is: ${this.age}`;
+}
+
+const boundFullName = fullNamefn.bind(person);
+
+
+const fullNameArrow = () => `Full name is: ${person.name} and age is: ${person.age}`;
+
+console.log(boundFullName());
+console.log(fullNameArrow());
+
+const Usuario = {
+  pontos: 20,
+  ganhou: function() {
+    this.pontos++;
+  }
+}
+Usuario.ganhou();
+console.log("Pontos do usuário:", Usuario.pontos);
