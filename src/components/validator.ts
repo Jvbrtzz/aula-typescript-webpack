@@ -1,9 +1,5 @@
-interface Form {
-  nome: string;
-  email: string;
-  mensagem?: string[];
-  cep: string;
-}
+import { Form } from "./interface/formulario";
+
 function validateForm(form: Form): string {
   const errorMsg: string[] = [];
 

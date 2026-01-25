@@ -1,5 +1,6 @@
 import { validateForm } from "./validator";
 import { getCepInfo } from "../components/http/http";
+import { Form } from "./interface/formulario";
 
 function getFormInfo(): string | void {
   const form = document.querySelector("form") as HTMLFormElement;
@@ -56,7 +57,7 @@ async function validate(formData: {
 
   if (validationMsg !== "Formulário válido") {
     errorDiv.textContent = validationMsg;
-    writeUserData(" ", " ", " ", " ", " ");
+    writeUserData('');
     return;
   }
 
@@ -67,16 +68,20 @@ async function validate(formData: {
     rua = cepData?.logradouro || "";
   }else {
     errorDiv.textContent = "CEP inválido.";
-    writeUserData(" ", " ", " ", " ", " ");
+    writeUserData('');
     return;
   }
 
   errorDiv.style.color = "green";
   errorDiv.textContent = "Formulário válido!";
-  writeUserData(formData.nome, formData.email, formData.cep, rua, formData.message ? formData.message : "");
+  writeUserData(formData as Form);
 }
 
-function writeUserData(nome: string, email: string, cep: string, rua: string, message?: string): void {
+function writeUserData(form: Form | string): void {
+  if (typeof form === "string") {
+    return;
+  }
+  const { nome, email, cep, mensagem, rua } = form;
   if (nome && email && cep) {
     const nomeItem = document.querySelector("#user-name") as HTMLElement;
     const emailItem = document.querySelector("#user-email") as HTMLElement;
@@ -86,8 +91,8 @@ function writeUserData(nome: string, email: string, cep: string, rua: string, me
 
     nomeItem.textContent = nome;
     emailItem.textContent = email;
-    if (message) {
-      messageItem.textContent = message;
+    if (mensagem) {
+      messageItem.textContent = mensagem[0];
     }
     cepItem.textContent = cep;
     ruaItem.textContent = rua;
